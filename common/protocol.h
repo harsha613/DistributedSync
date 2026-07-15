@@ -3,7 +3,7 @@
 #include <cstdint>
 
 namespace sync {
-    enum class command : uint16_t
+    enum class Command : uint16_t
     {
         LOGIN = 1,
         LOGIN_RESPONSE,
