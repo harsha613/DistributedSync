@@ -32,7 +32,7 @@ namespace sync {
         bool receiveAll(uint8_t* data, size_t size);
 
     private:
-        int socketfd;
+        int socketFd;
         bool connected;
     };
 }
