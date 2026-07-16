@@ -23,9 +23,9 @@ namespace sync {
 
     bool isconnected() const;
 
-    bool sendPacket(Command command, const std::vector<uint8_t>& payload);
+    bool sendPacket(const Packet& packet);
 
-    bool receivePacket(PacketHeader& header, std::vector<uint8_t>& payload);
+    bool receivePacket(Packet& packet);
 
     private:
         bool sendAll(const uint8_t* data, size_t size);

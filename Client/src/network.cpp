@@ -102,12 +102,12 @@ namespace sync {
         return true;
     }
 
-    bool Network::sendPacket(Command command, const std::vector<uint8_t>& payload) {
+    bool Network::sendPacket(const Packet& packet) {
 
-        PacketHeader header;
-        header.command = htons(static_cast<uint16_t>(command));
+        PacketHeader header{};
+        header.command = htons(static_cast<uint16_t>(packet.command));
         header.reserved = htons(0);
-        header.payloadSize = htonl(static_cast<uint32_t>(payload.size()));
+        header.payloadSize = htonl(static_cast<uint32_t>(packet.payload.size()));
         header.requestId = htonll(0); // For simplicity, we can set this to 0 for now.
 
         // Send the header
@@ -116,15 +116,16 @@ namespace sync {
         }
 
         // Send the payload
-        if (!payload.empty() && !sendAll(payload.data(), payload.size())) {
+        if (!packet.payload.empty() && !sendAll(packet.payload.data(), packet.payload.size())) {
             return false;
         }
 
         return true;
     }
 
-    bool Network::receivePacket(PacketHeader& header, std::vector<uint8_t>& payload) {
+    bool Network::receivePacket(Packet& packet) {
 
+        PacketHeader header{};
         // Receive the header
         if (!receiveAll(&header, sizeof(header))) {
             return false;
@@ -136,11 +137,13 @@ namespace sync {
         header.payloadSize = ntohl(header.payloadSize);
         header.requestId = ntohll(header.requestId);
 
-        // Resize the payload vector to hold the incoming data
-        payload.resize(header.payloadSize);
+        // populate the packet structure
+        packet.command = static_cast<Command>(header.command);
+        packet.requestId = header.requestId;
+        packet.payload.resize(header.payloadSize);
 
         // Receive the payload
-        if (header.payloadSize > 0 && !receiveAll(payload.data(), header.payloadSize)) {
+        if (header.payloadSize > 0 && !receiveAll(packet.payload.data(), header.payloadSize)) {
             return false;
         }
 
