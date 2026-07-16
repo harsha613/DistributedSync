@@ -26,7 +26,7 @@ namespace sync {
 
         bool createDirectory(const std::filesystem::path& relativePath);
 
-        bool deleteFile(const std::filesystem::path& relativePath);
+        bool remove(const std::filesystem::path& relativePath);
 
         bool readFile(const std::filesystem::path& relativePath, std::vector<uint8_t>& data) const;
 
