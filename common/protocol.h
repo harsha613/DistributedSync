@@ -53,6 +53,13 @@ namespace sync {
         uint64_t requestId;
     };
 
+    struct Packet
+    {
+        Command command;
+        uint64_t requestId;
+        std::vector<uint8_t> payload;
+    };
+
     static_assert(sizeof(PacketHeader) == 16, "Packet header must be exactly 16 bytes.");
 
 } // namespace sync
